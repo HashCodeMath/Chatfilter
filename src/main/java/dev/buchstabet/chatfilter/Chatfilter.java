@@ -30,7 +30,8 @@ public class Chatfilter extends JavaPlugin implements Listener {
   }
 
   @Override
-  public void onDisable() {}
+  public void onDisable() {
+  }
 
   @EventHandler
   public void onChat(AsyncPlayerChatEvent e) {
@@ -39,9 +40,10 @@ public class Chatfilter extends JavaPlugin implements Listener {
       if (checkWord(s.toLowerCase())) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(this.message);
-        Bukkit.dispatchCommand(
-            Bukkit.getConsoleSender(),
-            command.replace("{0}", e.getPlayer().getName()).replace("{1}", s).replace("&", "§"));
+        if (command != null)
+          Bukkit.dispatchCommand(
+                  Bukkit.getConsoleSender(),
+                  command.replace("{0}", e.getPlayer().getName()).replace("{1}", s).replace("&", "§"));
         e.getPlayer().playSound(e.getPlayer().getLocation(), sound, 1, 1);
         break;
       }
@@ -51,13 +53,13 @@ public class Chatfilter extends JavaPlugin implements Listener {
   private boolean checkWord(String word) {
     if (blockedWords.contains(word)) return true;
     String replacedWord =
-        word.replace("1", "i")
-            .replace("4", "a")
-            .replace("3", "e")
-            .replace("8", "b")
-            .replace("5", "s")
-            .replace("0", "o")
-            .replace("ß", "b");
+            word.replace("1", "i")
+                    .replace("4", "a")
+                    .replace("3", "e")
+                    .replace("8", "b")
+                    .replace("5", "s")
+                    .replace("0", "o")
+                    .replace("ß", "b");
 
     if (blockedWords.contains(replacedWord)) return true;
     return checkSimilarity(replacedWord);
