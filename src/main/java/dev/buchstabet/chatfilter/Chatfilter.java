@@ -24,12 +24,12 @@ import java.util.List;
 public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
 
   private String message, command;
-  private List<String> blockedWords;
+  private List<String> blockedWords, domains;
   private Sound sound;
   private final StringSimilarity stringSimilarity = new StringSimilarity();
   private double similarityIndex;
   private DatabaseManager databaseManager;
-  private boolean alreadySend;
+  private boolean alreadySend, advertising;
 
   @Override
   public void onEnable() {
@@ -43,6 +43,8 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
     this.message = this.getConfig().getString("message").replace("&", "§");
     this.sound = Sound.valueOf(this.getConfig().getString("sound"));
     this.alreadySend = this.getConfig().getBoolean("alreadySend");
+    this.advertising = this.getConfig().getBoolean("advertising");
+    this.domains = this.getConfig().getStringList("domains");
 
     ConfigurationSection section = this.getConfig().getConfigurationSection("mysql");
     if (section.getBoolean("enabled")) {
@@ -75,7 +77,7 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
         databaseManager.closeConnect(connection);
       }
     } else {
-      this.getConfig().getStringList("blockedWords");
+      blockedWords = this.getConfig().getStringList("blockedWords");
     }
 
     this.getCommand("chatfilter").setExecutor(this);
@@ -105,6 +107,7 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
 
   private boolean checkWord(String word, String wholeMessage) {
     if (blockedWords.contains(word)) return true;
+    if (advertising && checkAdvertising(wholeMessage)) return true;
     String replacedWord =
         word.replace("1", "i")
             .replace("4", "a")
@@ -116,6 +119,29 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
 
     if (blockedWords.contains(replacedWord)) return true;
     return checkSimilarity(replacedWord, wholeMessage);
+  }
+
+  private boolean checkAdvertising(String wholeMessage) {
+    wholeMessage = wholeMessage.toLowerCase();
+    for (String domain : domains) {
+      if (wholeMessage.contains(domain)
+          || wholeMessage.replace(" ", "").contains(domain)
+          || wholeMessage.replace(" ", "").contains(domain.replace(",", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace(":", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace(";", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace("-", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace("#", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace("~", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace("+", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace("=", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace(">", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace("<", "."))
+          || wholeMessage.replace(" ", "").contains(domain.replace("*", "."))) {
+
+        return true;
+      }
+    }
+    return false;
   }
 
   private boolean checkSimilarity(String replacedWord, String wholeMessage) {
@@ -142,7 +168,7 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
           "§cThis command is activated only when the database connection is enabled.");
       return true;
     }
-    if (args.length >= 1) {
+    if (args.length < 1) {
       sender.sendMessage("§cPlease use: /" + label + " <add/remove/list> [word]");
     } else {
       Connection connection = databaseManager.getConnection();

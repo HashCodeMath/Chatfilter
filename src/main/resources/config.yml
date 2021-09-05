@@ -10,6 +10,17 @@ blockedWords:
   - looser
   - lappen
 
+# Should advertising be automatically blocked
+advertising: true
+domains:
+  - .de
+  - .org
+  - .com
+  - .tv
+  - .us
+  - .en
+  - .net
+
 # This command is executed when a player writes wrong words.
 command: 'say {0} has offended.'
 
