@@ -142,15 +142,19 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
           "§cThis command is activated only when the database connection is enabled.");
       return true;
     }
-    if (args.length != 2) {
+    if (args.length >= 1) {
       sender.sendMessage("§cPlease use: /" + label + " <add/remove/list> [word]");
     } else {
-      args[1] = args[1].toLowerCase();
       Connection connection = databaseManager.getConnection();
       try {
         switch (args[0]) {
           case "add":
             {
+              if (args.length != 2) {
+                break;
+              }
+
+              args[1] = args[1].toLowerCase();
               PreparedStatement statement =
                   connection.prepareStatement(
                       "INSERT INTO `chatfilter_blockedwords` (`word`) VALUES (?)");
@@ -167,6 +171,11 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
 
           case "remove":
             {
+              if (args.length != 2) {
+                break;
+              }
+
+              args[1] = args[1].toLowerCase();
               PreparedStatement statement =
                   connection.prepareStatement(
                       "DELETE FROM `chatfilter_blockedwords` WHERE `word` = ?");
