@@ -126,17 +126,19 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
     for (String domain : domains) {
       if (wholeMessage.contains(domain)
           || wholeMessage.replace(" ", "").contains(domain)
-          || wholeMessage.replace(" ", "").contains(domain.replace(",", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace(":", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace(";", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace("-", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace("#", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace("~", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace("+", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace("=", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace(">", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace("<", "."))
-          || wholeMessage.replace(" ", "").contains(domain.replace("*", "."))) {
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "(.)"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "(,)"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", ","))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", ":"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", ";"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "-"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "#"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "~"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "+"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "="))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", ">"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "<"))
+          || wholeMessage.replace(" ", "").contains(domain.replace(".", "*"))) {
 
         return true;
       }
