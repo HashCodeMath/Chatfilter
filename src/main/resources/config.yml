@@ -1,4 +1,5 @@
 # Please write all words exclusively in lower case.
+# This list is used only when the database is disabled.
 blockedWords:
   - noob
   - hs
@@ -12,9 +13,21 @@ blockedWords:
 # This command is executed when a player writes wrong words.
 command: 'say {0} has offended.'
 
+# Should the message be sent to the chat if it contains a blocked word.
+alreadySend: false
+
 # The sound and the message are sent to players who offend.
 message: '&e[Chatfilter] &cYou have written a word that is blocked.'
 sound: ANVIL_BREAK
 
 # Word similarity index
 similarity: 0.6
+
+# Database
+mysql:
+  enabled: false
+  hostname: 'localhost'
+  port: 3306
+  database: 'chatfilter'
+  username: 'root'
+  password: 'password'

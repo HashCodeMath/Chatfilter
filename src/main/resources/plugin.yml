@@ -2,3 +2,10 @@ main: dev.buchstabet.chatfilter.Chatfilter
 version: 1.0
 author: Buchstabet
 name: Chatfilter
+
+commands:
+  chatfilter:
+    permission: chatfilter.command.chatfilter
+    permission-message: §4You are not permitted to administrate chatfilter.
+    aliases: cf
+    description: Administrate the blocked words of chatfilter
