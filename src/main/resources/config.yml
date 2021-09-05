@@ -1,0 +1,17 @@
+# Please write all words exclusively in lower case.
+blockedWords:
+  - noob
+  - hs
+  - hurensohn
+  - nutte
+  - nuttensohn
+  - ez
+  - looser
+  - lappen
+
+# This command is executed when a player writes wrong words.
+command: 'say {0} has policyigt.'
+
+# The sound and the message are sent to players who offend.
+message: '&e[Chatfilter] &cYou have written a word that is blocked.'
+sound: ANVIL_BREAK

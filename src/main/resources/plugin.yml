@@ -1,0 +1,4 @@
+main: dev.buchstabet.chatfilter.Chatfilter
+version: 1.0
+author: Buchstabet
+name: Chatfilter
