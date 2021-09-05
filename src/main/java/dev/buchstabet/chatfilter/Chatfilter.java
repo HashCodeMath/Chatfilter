@@ -14,6 +14,8 @@ public class Chatfilter extends JavaPlugin implements Listener {
   private String message, command;
   private List<String> blockedWords;
   private Sound sound;
+  private final StringSimilarity stringSimilarity = new StringSimilarity();
+  private double similarityIndex;
 
   @Override
   public void onEnable() {
@@ -23,7 +25,7 @@ public class Chatfilter extends JavaPlugin implements Listener {
     if (this.getConfig().isSet("command")) {
       this.command = this.getConfig().getString("command");
     }
-
+    this.similarityIndex = this.getConfig().getDouble("similarity");
     this.message = this.getConfig().getString("message").replace("&", "§");
     this.blockedWords = this.getConfig().getStringList("blockedWords");
     sound = Sound.valueOf(this.getConfig().getString("sound"));
@@ -67,16 +69,9 @@ public class Chatfilter extends JavaPlugin implements Listener {
 
   private boolean checkSimilarity(String replacedWord) {
     for (String blockedWord : blockedWords) {
-      int similarCount = 0;
-      for (int i = 0; i < blockedWord.length(); i++) {
-        if (i >= replacedWord.length()) break;
 
-        if (replacedWord.split("")[i].equalsIgnoreCase(blockedWord.split("")[i])) {
-          similarCount++;
-        }
-      }
-
-      if ((double) similarCount / blockedWord.length() > 0.7) {
+      Bukkit.broadcastMessage(blockedWord + " -> " + replacedWord + " = " + stringSimilarity.similarity(replacedWord, blockedWord));
+      if (stringSimilarity.similarity(replacedWord, blockedWord) > similarityIndex) {
         return true;
       }
     }
