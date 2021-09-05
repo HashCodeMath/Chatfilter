@@ -87,7 +87,7 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
 
   @EventHandler(priority = EventPriority.LOWEST)
   public void onChat(AsyncPlayerChatEvent e) {
-    if(e.isCancelled()) return;
+    if (e.isCancelled()) return;
     String[] message = e.getMessage().split(" ");
     for (String s : message) {
       if (checkWord(s.toLowerCase(), e.getMessage())) {
@@ -130,19 +130,20 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
   }
 
   @Override
-  public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-    return Arrays.asList("add", "remove");
+  public List<String> onTabComplete(
+      CommandSender sender, Command command, String alias, String[] args) {
+    return Arrays.asList("add", "remove", "list");
   }
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     if (databaseManager == null) {
       sender.sendMessage(
-          "§4§lThis command is activated only when the database connection is enabled.");
+          "§cThis command is activated only when the database connection is enabled.");
       return true;
     }
     if (args.length != 2) {
-      sender.sendMessage("§cPlease use: /" + label + " add/remove <word>");
+      sender.sendMessage("§cPlease use: /" + label + " <add/remove/list> [word]");
     } else {
       args[1] = args[1].toLowerCase();
       Connection connection = databaseManager.getConnection();
@@ -179,9 +180,17 @@ public class Chatfilter extends JavaPlugin implements Listener, TabCompleter {
 
               break;
             }
+
+          case "list":
+            {
+              sender.sendMessage(
+                  "§6List of words (" + blockedWords.size() + ") that are in the chat filters:");
+              blockedWords.forEach(s -> sender.sendMessage("§7- §e" + s));
+              break;
+            }
         }
       } catch (SQLException e) {
-        sender.sendMessage("§cEs ist ein Fehler aufgetreten: " + e.getMessage());
+        sender.sendMessage("§cAn error occurred: " + e.getMessage());
       } finally {
         databaseManager.closeConnect(connection);
       }
